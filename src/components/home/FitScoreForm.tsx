@@ -1,28 +1,13 @@
 import { useState } from "react";
 import { Calculator, User, Zap, Heart } from "lucide-react";
+import { supabase } from "../../services/supabase";
 
 // Interface para os dados do formulário
 interface FormData {
-  candidato: {
-    nome: string;
-    email: string;
-  };
-  performance: {
-    experiencia: number;
-    entregas: number;
-    habilidades: number;
-    qualidade: number;
-  };
-  energia: {
-    disponibilidade: number;
-    prazos: number;
-    pressão: number;
-  };
-  cultura: {
-    valores1: number;
-    valores2: number;
-    valores3: number;
-  };
+  candidato: { nome: string; email: string };
+  performance: { experiencia: number; entregas: number; habilidades: number; qualidade: number };
+  energia: { disponibilidade: number; prazos: number; pressão: number };
+  cultura: { valores1: number; valores2: number; valores3: number };
 }
 
 const initialFormData: FormData = {
@@ -36,6 +21,8 @@ export default function FitScoreForm() {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
 
   const steps = [
     { title: "Dados do Candidato", icon: User },
@@ -44,7 +31,6 @@ export default function FitScoreForm() {
     { title: "Cultura", icon: Heart },
   ];
 
-  // Validação para cada passo
   const isStepValid = () => {
     if (currentStep === 0) return formData.candidato.nome && formData.candidato.email;
     if (currentStep === 1) return Object.values(formData.performance).every((v) => v > 0);
@@ -53,40 +39,33 @@ export default function FitScoreForm() {
     return true;
   };
 
-  // Cálculo do FitScore
   const calculateFitScore = () => {
     const performanceScore =
       (formData.performance.experiencia +
         formData.performance.entregas +
         formData.performance.habilidades +
-        formData.performance.qualidade) /
-      4;
+        formData.performance.qualidade) / 4;
 
     const energiaScore =
       (formData.energia.disponibilidade +
         formData.energia.prazos +
-        formData.energia.pressão) /
-      3;
+        formData.energia.pressão) / 3;
 
     const culturaScore =
       (formData.cultura.valores1 +
         formData.cultura.valores2 +
-        formData.cultura.valores3) /
-      3;
+        formData.cultura.valores3) / 3;
 
-    // Média ponderada: Performance 40%, Energia 30%, Cultura 30%
     return Math.round(performanceScore * 0.4 + energiaScore * 0.3 + culturaScore * 0.3);
   };
 
-  // Classificação do FitScore
-  const getClassificação = (score: number) => {
+  const getClassificacao = (score: number) => {
     if (score >= 80) return { label: "Fit Altíssimo", color: "text-green-600" };
     if (score >= 60) return { label: "Fit Aprovado", color: "text-blue-600" };
     if (score >= 40) return { label: "Fit Questionável", color: "text-yellow-600" };
     return { label: "Fora do Perfil", color: "text-red-600" };
   };
 
-  // Manipulador de submissão
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isStepValid()) return;
@@ -94,50 +73,39 @@ export default function FitScoreForm() {
     setIsSubmitting(true);
 
     const score = calculateFitScore();
-    const classificação = getClassificação(score);
+    const classificacao = getClassificacao(score);
 
-    // Integração com Supabase (descomentar quando configurado)
-    /*
-    import { supabase } from "../services/supabase";
     const { error } = await supabase.from("candidates").insert({
       name: formData.candidato.nome,
       email: formData.candidato.email,
-      answers: JSON.stringify({
-        performance: formData.performance,
-        energia: formData.energia,
-        cultura: formData.cultura,
-      }),
       fit_score: score,
-      classification: classificação.label,
+      classification: classificacao.label,
     });
+
     if (error) {
-      alert(`Erro ao salvar: ${error.message}`);
+      setPopupMessage(`Erro ao salvar: ${error.message}`);
+      setShowPopup(true);
       setIsSubmitting(false);
       return;
     }
-    // Trigger webhook para n8n
-    await fetch("URL_DO_WEBHOOK_N8N", {
-      method: "POST",
-      body: JSON.stringify({ email: formData.candidato.email, result: classificação.label }),
-    });
-    */
 
-    // Feedback temporário
-    alert(`Avaliação Concluída! ${formData.candidato.nome} - ${classificação.label} (${score} pontos)`);
+    setPopupMessage(`Avaliação Concluída! ${formData.candidato.nome} - ${classificacao.label} (${score} pontos)`);
+    setShowPopup(true);
 
-    setIsSubmitting(false);
-    setFormData(initialFormData);
-    setCurrentStep(0);
+    setTimeout(() => {
+      setShowPopup(false);
+      setIsSubmitting(false);
+      setFormData(initialFormData);
+      setCurrentStep(0);
+    }, 20000);
   };
 
-  // Suporte a "Enter" para avançar passos
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && isStepValid() && currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     }
   };
 
-  // Renderização do passo de dados do candidato
   const renderCandidatoStep = () => (
     <div className="space-y-6">
       <div>
@@ -148,7 +116,7 @@ export default function FitScoreForm() {
           id="nome"
           type="text"
           value={formData.candidato.nome}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          onChange={(e) =>
             setFormData((prev) => ({
               ...prev,
               candidato: { ...prev.candidato, nome: e.target.value },
@@ -175,7 +143,7 @@ export default function FitScoreForm() {
           id="email"
           type="email"
           value={formData.candidato.email}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          onChange={(e) =>
             setFormData((prev) => ({
               ...prev,
               candidato: { ...prev.candidato, email: e.target.value },
@@ -197,7 +165,6 @@ export default function FitScoreForm() {
     </div>
   );
 
-  // Renderização de blocos de perguntas
   const renderQuestionBlock = (
     title: string,
     questions: { key: string; label: string }[],
@@ -218,7 +185,7 @@ export default function FitScoreForm() {
                   name={key}
                   value={value}
                   checked={formData[category][key as keyof FormData[typeof category]] === value}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
                       [category]: { ...prev[category], [key]: parseInt(e.target.value) },
@@ -226,65 +193,56 @@ export default function FitScoreForm() {
                   }
                   onKeyDown={handleKeyDown}
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500"
-                  aria-describedby={formData[category][key as keyof FormData[typeof category]] === 0 && currentStep > 0 ? `${key}-error` : undefined}
                 />
                 <label className="text-sm">{value}</label>
               </div>
             ))}
           </div>
-          {formData[category][key as keyof FormData[typeof category]] === 0 && currentStep > 0 && (
-            <p id={`${key}-error`} className="text-red-500 text-sm mt-1">
-              Este campo é obrigatório
-            </p>
-          )}
         </div>
       ))}
     </fieldset>
   );
 
-  // Renderização do passo atual
   const renderStep = () => {
     switch (currentStep) {
       case 0:
         return renderCandidatoStep();
       case 1:
-        return renderQuestionBlock(
-          "Performance - Experiência e Entregas",
-          [
-            { key: "experiencia", label: "Nível de experiência na área" },
-            { key: "entregas", label: "Qualidade das entregas anteriores" },
-            { key: "habilidades", label: "Domínio técnico das habilidades" },
-            { key: "qualidade", label: "Atenção aos detalhes e qualidade" },
-          ],
-          "performance"
-        );
+        return renderQuestionBlock("Performance - Experiência e Entregas", [
+          { key: "experiencia", label: "Nível de experiência na área" },
+          { key: "entregas", label: "Qualidade das entregas anteriores" },
+          { key: "habilidades", label: "Domínio técnico das habilidades" },
+          { key: "qualidade", label: "Atenção aos detalhes e qualidade" },
+        ], "performance");
       case 2:
-        return renderQuestionBlock(
-          "Energia - Disponibilidade e Ritmo",
-          [
-            { key: "disponibilidade", label: "Disponibilidade para o trabalho" },
-            { key: "prazos", label: "Capacidade de cumprir prazos" },
-            { key: "pressão", label: "Performance sob pressão" },
-          ],
-          "energia"
-        );
+        return renderQuestionBlock("Energia - Disponibilidade e Ritmo", [
+          { key: "disponibilidade", label: "Disponibilidade para o trabalho" },
+          { key: "prazos", label: "Capacidade de cumprir prazos" },
+          { key: "pressão", label: "Performance sob pressão" },
+        ], "energia");
       case 3:
-        return renderQuestionBlock(
-          "Cultura - Valores da LEGAL",
-          [
-            { key: "valores1", label: "Alinhamento com transparência" },
-            { key: "valores2", label: "Colaboração em equipe" },
-            { key: "valores3", label: "Inovação e aprendizado contínuo" },
-          ],
-          "cultura"
-        );
+        return renderQuestionBlock("Cultura - Valores da LEGAL", [
+          { key: "valores1", label: "Alinhamento com transparência" },
+          { key: "valores2", label: "Colaboração em equipe" },
+          { key: "valores3", label: "Inovação e aprendizado contínuo" },
+        ], "cultura");
       default:
         return null;
     }
   };
 
+  const Popup = () =>
+    showPopup ? (
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
+        <div className="bg-white p-6 rounded-lg shadow-lg text-center max-w-xs">
+          <p>{popupMessage}</p>
+        </div>
+      </div>
+    ) : null;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 p-4 relative">
+      <Popup />
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-blue-600 mb-2">Mini FitScore™</h1>
@@ -293,23 +251,19 @@ export default function FitScoreForm() {
 
         <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="flex items-center gap-2 text-xl font-semibold" aria-current="step">
+            <h2 className="flex items-center gap-2 text-xl font-semibold">
               {(() => {
                 const IconComponent = steps[currentStep].icon;
                 return <IconComponent size={20} />;
               })()}
               {steps[currentStep].title}
             </h2>
-            <span className="text-sm text-gray-500">
-              {currentStep + 1} de {steps.length}
-            </span>
+            <span className="text-sm text-gray-500">{currentStep + 1} de {steps.length}</span>
           </div>
-          <progress
-            value={currentStep / (steps.length - 1)}
-            max={1}
-            className="w-full h-2.5 mb-6"
-          />
+
+          <progress value={currentStep / (steps.length - 1)} max={1} className="w-full h-2.5 mb-6" />
           <div className="space-y-6">{renderStep()}</div>
+
           <div className="flex justify-between pt-6">
             <button
               type="button"
@@ -319,11 +273,12 @@ export default function FitScoreForm() {
             >
               Anterior
             </button>
+
             {currentStep < steps.length - 1 ? (
               <button
                 type="button"
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
-                onClick={() => isStepValid() && setCurrentStep(Math.min(steps.length - 1, currentStep + 1))}
+                onClick={() => isStepValid() && setCurrentStep(currentStep + 1)}
                 disabled={isSubmitting || !isStepValid()}
               >
                 Próximo

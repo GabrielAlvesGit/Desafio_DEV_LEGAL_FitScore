@@ -7,9 +7,8 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 
 /* ============ Pages =========== */
 import Home from "./page-template/Home/Home.tsx"
-import Login from "./page-template/Login/AuthPage.tsx"
+import Dashboard from "./page-template/Dashboard/Dashboard.tsx"
 import Erro from "./page-template/erro/Erro.tsx"
-import ContactDetails from "./page-template/ContactDetals/ContactDetails"
 
 // const router = createBrowserRouter([
 //   {
@@ -34,14 +33,8 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "login",
-        element: <Login />,
-      },
-     
-       // 5 - nested routes - identificador único - dynamic routes
-      {
-        path: "/contato/:id",
-        element: <ContactDetails />,
+        path: "Dashboard",
+        element: <Dashboard />,
       },
        // 7 - navigate para páginas não existentes
       {

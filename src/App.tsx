@@ -18,7 +18,7 @@ const App: React.FC = () => {
         <>
             <Header />
                 <Outlet />
-                {location.pathname !== '/login' && <Footer />}
+            <Footer />
         </>
     );
 };
