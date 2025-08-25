@@ -1,0 +1,120 @@
+@use './variables';
+
+/*=============== BASE ===============*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+::before, ::after {
+    border-width: 0;
+    border-style: solid;
+    border-color: transparent;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Padrão */
+body,
+button,
+input,
+textarea {
+    font-family: variables.$body-font;
+    font-size: variables.$normal-font-size;
+}
+
+body {
+    background-color: variables.$body-color;
+    color: variables.$text-color;
+}
+
+h1,
+h2,
+h3 {
+    color: variables.$title-color;
+    font-weight: variables.$font-semi-bold;
+    padding: 0 0 12px;
+    margin: 0 0 12px;
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.45s all;
+
+    &:hover {
+        opacity: 0.8a ;
+        transition: 0.45s all;
+    }
+}
+
+p {
+    padding: 0 0 12px;
+    margin: 0 0 12px;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/*=============== REUSABLE CSS CLASSES ===============*/
+.section {
+    padding: 6rem 0 2rem;
+}
+
+.section__title {
+    font-size: variables.$h1-font-size;
+    color: variables.$title-color;
+}
+
+.section__subtitle {
+    display: block;
+    font-size: variables.$small-font-size;
+    margin-bottom: 4rem;
+}
+
+.section__title,
+.section__subtitle {
+    text-align: center;
+}
+
+
+/*=============== BUTTONS ===============*/
+.button {
+    display: inline-block;
+    background-color: variables.$primary-color-black;
+    color: variables.$container-color;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    border-radius: 9999px;
+    font-weight: variables.$font-medium;
+}
+
+.button:hover {
+    background-color: variables.$title-color-dark;
+}
+
+.button__icon {
+    margin-left: variables.$mb-0-5;
+}
+
+.button--flex {
+    display: inline-flex;
+    align-items: center;
+}

@@ -1,0 +1,24 @@
+@use '../base/variables' ;
+@use '../base/grid' ;
+
+.header {
+    width: 100%;
+    position: relative;
+    background-color: variables.$primary-color-white;
+    top: 0;
+    left: 0;
+    z-index: variables.$z-tooltip; 
+    box-shadow: variables.$boxShadow-header;
+    transition: 0.45s all;
+    cursor: pointer;
+
+    &:hover {
+        transition: 0.35s all;
+    }
+}
+
+@media (max-width: 1200px) {
+    .header {
+        padding: 15px 0;
+    }
+}

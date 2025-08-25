@@ -1,0 +1,20 @@
+/*=============== Imports Scss ===============*/
+/* OBS:
+´´´´´´´´´´ Como estou usando a versão 3.0.0 do Scss @import 
+´´´´´´´´´´ foi descontinuado então estou usando o @use 
+                                                            */
+
+/*=============== Base ===============*/
+@use './base/variables';
+@use './base/grid.scss';
+@use './base/reset.scss';
+@use './base/font';
+
+/*=============== Global ===============*/
+@use './global/header';
+@use './global/nav';
+@use './global/footer';
+
+/*=============== Pages ===============*/
+@use './pages/banner';
+@use './pages/AuthPage';

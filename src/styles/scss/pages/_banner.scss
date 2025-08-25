@@ -1,0 +1,42 @@
+@use '../base/variables';
+@use '../base/grid';
+
+.banner {
+  position: relative;
+  background-color: linear-gradient(black 80%, transparent 100%);
+
+  &__content {
+    display: flex;
+    justify-content: space-between;
+    padding: 24px 0;
+    height: 326px;
+    background: linear-gradient(to bottom, hsl(238, 97%, 36%) -2%, rgb(0 0 0 / 90%) 117%);
+    // background: linear-gradient(to bottom, hsl(238, 97%, 36%) 50%, #000000e8 100%);
+
+    >.container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    &__top {
+      text-align: center;
+
+      &__title {
+        color: variables.$primary-color-white;
+        font-size: variables.$big-font-size;
+        font-weight: variables.$font-semi-bold-gold;
+        line-height: 1.25;
+        padding: 0;
+        margin: 0;
+      }
+    }
+  }
+}
+
+/*============================== Responsividade ==============================*/
+/*=============== BREAKPOINTS ===============*/
+/* For large devices */
+// @media (max-width: 1200px) {
+
+// }
