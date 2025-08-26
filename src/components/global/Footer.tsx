@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
     return (
         <footer className="footer">
             <div className="container">
-              footer
+              <p>© 2025 PSL LEGAL - Desafio Técnico - FitScore LEGAL™</p>
             </div>
         </footer>
     )

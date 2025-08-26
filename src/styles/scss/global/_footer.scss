@@ -1,21 +1,18 @@
 @use '../base/variables' ;
 
 .footer {
-    background-color: variables.$secondary-color-gray;
-    padding: 100px 0 24px 0;
+   padding: 24px 0;
+   background: linear-gradient(to bottom, hsl(238, 97%, 36%) -2%, rgba(0, 0, 0, 0.9) 181%);
 
     >.container {
       display: flex;
-      flex-direction: column;
-      gap: 55px;
-    }
-}
+      justify-content: center;
+      align-items: center;
 
-/*============================== Responsividade ==============================*/
-/*=============== BREAKPOINTS ===============*/
-/* For large devices */
-@media only screen and (max-width: 1024px) {
-  .footer {
-   
-  }
+      p {
+        padding: 0;
+        margin: 0;
+        color: variables.$primary-color-white;
+      }
+    }
 }
