@@ -27,6 +27,10 @@ textarea {
     // border: none;
 }
 
+input {
+    padding: 10px;
+}
+
 body {
     background-color: variables.$body-color;
     color: variables.$text-color;

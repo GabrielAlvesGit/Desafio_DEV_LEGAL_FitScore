@@ -1,0 +1,74 @@
+@use '../base/grid';
+
+.fitScoreForm {
+    padding: 80px 0 30px 0;
+
+    .container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__steps {
+
+        &__step {
+            gap: 15px;
+        }
+    }
+
+    &__progressBar {
+        margin: 20px 0 20px 0;
+    }
+
+    &__form {
+        padding: 24px;
+        min-height: 400px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        &__box {
+
+            &__stepIndicator {
+                padding: 5px 10px;
+            }
+        }
+    }
+
+    &__candidato {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    &__navigation {
+        padding: 20px 0 0 0;
+        margin: 20px 0 0 0;
+    }
+
+    &__btnNext {
+        display: flex;
+        align-items: center;
+        position: relative;
+        padding: 8px 16px;
+        font-size: 12px;
+        color: white;
+        border-radius: calc(0.5rem - 2px);
+        font-weight: 400;
+        line-height: 16px;
+        text-decoration: none;
+        background: #0309B5;
+        gap: 5px;
+    }
+
+    label {
+        margin-bottom: 10px;
+    }
+}
+
+
+/*============================== Responsividade ==============================*/
+/*=============== BREAKPOINTS ===============*/
+/* For large devices */
+@media (max-width: grid.$screen-md) { 
+  
+}
