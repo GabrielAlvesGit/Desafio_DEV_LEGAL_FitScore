@@ -31,15 +31,11 @@ const Header: React.FC = () => {
                     <ul className="nav__menu__list">
                     
                         <li className="nav__menu__list__item">
-                            <Link className="nav__menu__list__item__link" to="#">Plataformas Digitais</Link>
-                        </li>
-                            
-                        <li className="nav__menu__list__item">
-                            <Link className="nav__menu__list__item__link" to="#">Contato</Link>
+                            <Link className="nav__menu__list__item__link" to="/Dashboard">PDashboard</Link>
                         </li>
 
                         <li className="nav__menu__list__item">
-                            <Link className="nav__menu__list__item__link" to="#">Quem Somos</Link>
+                            <Link className="nav__menu__list__item__link" to="/">FitScore</Link>
                         </li>
                     </ul>
 
