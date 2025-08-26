@@ -1,6 +1,6 @@
-# React + TypeScript + Vite
+# FitScore
 
 
 <h1 align="center">
-  <a href="https://business-ia.vercel.app/">website view</a>
+  <a href="https://desafio-dev-legal-fit-score.vercel.app/">website view - FitScore</a>
 </h1>

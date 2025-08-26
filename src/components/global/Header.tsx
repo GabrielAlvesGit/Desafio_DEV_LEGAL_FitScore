@@ -31,7 +31,7 @@ const Header: React.FC = () => {
                     <ul className="nav__menu__list">
                     
                         <li className="nav__menu__list__item">
-                            <Link className="nav__menu__list__item__link" to="/Dashboard">PDashboard</Link>
+                            <Link className="nav__menu__list__item__link" to="/Dashboard">Dashboard</Link>
                         </li>
 
                         <li className="nav__menu__list__item">

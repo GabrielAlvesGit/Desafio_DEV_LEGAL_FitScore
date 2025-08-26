@@ -33,7 +33,7 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "Dashboard",
+        path: "dashboard",
         element: <Dashboard />,
       },
        // 7 - navigate para páginas não existentes
