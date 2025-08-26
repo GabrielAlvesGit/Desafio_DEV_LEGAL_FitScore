@@ -20,22 +20,22 @@ const Header: React.FC = () => {
         
     return (
         <header className="header">
-            <nav className={`nav container ${isMenuOpen ? 'active' : ''}`}>
+            <nav className={`nav ${isMenuOpen ? '' : ''} container`}>
                 <article className="nav__logo">
                     <Link to="/" className="nav__logo__link">
                         <img className="nav__logo__img" src={logoLegal} alt="logo Legal" />
                     </Link>
                 </article>
 
-                <div className="nav__menu">
+                <div className={`nav__menu ${isMenuOpen ? 'nav__menu--active' : ''}`} tabIndex={0}>
                     <ul className="nav__menu__list">
                     
                         <li className="nav__menu__list__item">
-                            <Link className="nav__menu__list__item__link" to="/Dashboard">Dashboard</Link>
+                            <Link className="nav__menu__list__item__link" to="/"><i className='bx bx-tachometer'></i> FitScore</Link>
                         </li>
 
                         <li className="nav__menu__list__item">
-                            <Link className="nav__menu__list__item__link" to="/">FitScore</Link>
+                            <Link className="nav__menu__list__item__link" to="/Dashboard"><i className='bx bx-line-chart'></i> Dashboard</Link>
                         </li>
                     </ul>
 

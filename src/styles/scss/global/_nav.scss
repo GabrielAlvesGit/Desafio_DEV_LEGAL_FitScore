@@ -1,95 +1,112 @@
   @use '../base/variables';
-@use '../base/grid';
+  @use '../base/grid';
 
   .nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    
-    &__logo {
-        
-        transition: .45s all;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
 
-        &__img {
-            width: auto;
-            height: 46px;
-        }
+      &__logo {
 
-        &:hover {
-            opacity: 0.8;
-            transition: .35s all;
-        }
-    }
+          transition: .45s all;
 
-    &__menu {
+          &__img {
+              width: 85px;
+              height: 41px;
+          }
 
-        &__list {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-            
-            &__item {
-                
-                &__link {
-                    display: flex;
-                    align-items: center;
-                    position: relative;
-                    min-height: 77px;
-                    padding: 15px 21px 15px 0 ;
-                    font-size: 12px;
-                    color: variables.$text-color;
-                    font-weight: 400;
-                    line-height: 16px;
-                    text-decoration: none;
+          &:hover {
+              opacity: 0.8;
+              transition: .35s all;
+          }
+      }
 
-                      &:nth-child(1) :nth-last-child(1)  {
-                        &::after {
-                            content: '';
-                            display: block;
-                            position: absolute;
-                            right: 0;
-                            top: 28px;
-                            width: 21px;
-                            height: 21px;
-                            background: url('../../../assets/icons/bx-chevron-down.svg') no-repeat center center;
-                            transition: width 0.3s ease-in-out;
-                        }
+      &__menu {
 
-                        &.active {
-                            &::after { 
-                                transform: rotate(-180deg);
-                                transition: all 0.3s ease;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+          &__list {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              gap: 20px;
 
-// @media (max-width: 1200px) {       
-//     .nav {
+              &__item {
 
-//         &__logo {
-//             width: 50px;
-//             height: 50px;
+                  &__link {
+                      display: flex;
+                      align-items: center;
+                      position: relative;
+                      // min-height: 77px;
+                      padding: 8px 16px;
+                      font-size: 12px;
+                      color: variables.$primary-color-white;
+                      border-radius: calc(.5rem - 2px);
+                      ;
+                      font-weight: 400;
+                      line-height: 16px;
+                      text-decoration: none;
+                      background: #0309B5;
+                      gap: 5px;
+                  }
+              }
+          }
+      }
 
-//             &__link {
-//                 display: none;
-//             }
+      &__toggle {
+          display: none;
+      }
+  }
 
-//             &__img {
-//                 display: flex;
-//                 max-width: 100%;
-//                 height: auto;
-//             }
-//         }
+  @media (max-width: 1200px) {
+      .nav {
 
-//         &__menu,
-//         &__toggle  {
-//             display: none;
-//         }
-//     }
-// }
+          &__menu {
+              position: absolute;
+              flex-direction: row-reverse;
+              align-items: flex-start;
+              justify-content: flex-end;
+              // height: 100%;
+              width: 100%;
+              background: variables.$primary-color-white;
+              // transform: translate(50%, 0);
+              // left: 50%;
+              top: 71px;
+              padding: 64px;
+              scrollbar-width: thin;
+              right: -999px;
+              transition: all .8s ease;
+              opacity: 0;
+
+              &--active {
+                  right: 0;
+                  transition: all .4s ease;
+                  opacity: 1;
+              }
+
+              &__list {
+                  flex-direction: column;
+
+                  align-items: flex-start;
+
+                  &__item {
+
+                      &__link {
+                          width: 113px;
+                      }
+                  }
+              }
+          }
+
+          &__toggle {
+              display: flex;
+
+              .uil-times,
+              .bx-menu {
+                  display: flex;
+
+                  &--active {
+                      display: none;
+                  }
+              }
+          }
+      }
+  }

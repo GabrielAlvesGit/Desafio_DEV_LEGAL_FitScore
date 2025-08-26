@@ -11,6 +11,7 @@
     box-shadow: variables.$boxShadow-header;
     transition: 0.45s all;
     cursor: pointer;
+    padding: 15px 0;
 
     &:hover {
         transition: 0.35s all;
@@ -19,6 +20,5 @@
 
 @media (max-width: 1200px) {
     .header {
-        padding: 15px 0;
     }
 }
