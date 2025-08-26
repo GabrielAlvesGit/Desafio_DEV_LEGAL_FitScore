@@ -1,0 +1,172 @@
+ @use '../base/variables';
+ @use '../base/grid';
+
+ .dashboard {
+
+     .container {
+         display: flex;
+         flex-direction: column;
+         gap: 30px;
+     }
+
+     &__recharge {
+         margin: 30px 30px;
+
+         button {
+             display: flex;
+             align-items: center;
+             position: relative;
+             padding: 8px 16px;
+             font-size: 12px;
+             color: variables.$primary-color-white;
+             border-radius: calc(0.5rem - 2px);
+             font-weight: variables.$font-normal;
+             line-height: 16px;
+             text-decoration: none;
+             background: #0309B5;
+             gap: 5px;
+         }
+     }
+
+     &__fitScore {
+
+         &__box {
+             padding: 24px;
+             border: 1px solid #e0e0e0;
+             background-color: variables.$primary-color-white;
+             box-shadow: 0px 0px 60px rgba(0, 0, 0, 0.15);
+
+             &.FitAltossimo {
+                 background-color: #E7F6EC;
+             }
+
+             &.FitApproved {
+                 background-color: #EDEAFF;
+             }
+
+             &.Fora {
+                 background-color: #FDECEC;
+             }
+
+             &.questionavel {
+                 background-color: #FEF5E6;
+             }
+
+             &__title {
+                 font-weight: 700;
+                 color: variables.$title-color;
+             }
+
+             &__number {
+                 &--total {
+                     color: variables.$primary-color-blue;
+                 }
+
+                 &--FitAltossimo {
+                     color: #16A249;
+                 }
+
+                 &--FitApproved {
+                     color: #7F67FC;
+                 }
+
+                 &--Fora {
+                     color: #EF4444;
+                 }
+
+                 &--questionavel {
+                     color: #F5A00E;
+                 }
+             }
+
+             &__icon {
+                 .bx {
+                     font-size: 32px;
+                 }
+             }
+         }
+     }
+
+     &__filters {
+         padding: 24px;
+         border: 1px solid #e0e0e0;
+         background-color: white;
+         box-shadow: 0px 0px 60px rgba(0, 0, 0, 0.15);
+
+         &__title {
+             font-size: 24px;
+             color: variables.$title-color;
+         }
+     }
+
+     &__table {
+         padding: 24px;
+         border: 1px solid #e0e0e0;
+         background-color: variables.$primary-color-white;
+         box-shadow: 0px 0px 60px rgba(0, 0, 0, 0.15);
+
+         &__content {
+             padding-bottom: 24px;
+
+             &__title,
+             &__text {
+                 padding: 0;
+                 margin: 0;
+             }
+         }
+
+         &__box {
+             table {
+                width: 100%; 
+                overflow-x: auto; 
+                -webkit-overflow-scrolling: touch;
+
+                 tbody {
+                     tr {
+
+                         td,
+                         th {
+                             padding: 12px 16px;
+                             text-align: left;
+                             vertical-align: middle;
+                             white-space: normal;
+                             word-break: break-word;
+                             min-width: 120px;
+                             font-size: 0.875rem;
+
+                             > span {
+                               padding: 12px 16px;
+                                white-space: nowrap;
+                                display: block;
+                                width: 118px;
+                             }
+                         }
+                     }
+                 }
+
+                 thead {
+                     background-color: #f8fafc;
+
+                     th {
+                         font-weight: 600;
+                         color: #4b5563;
+                         text-transform: uppercase;
+                         font-size: 0.875rem;
+                         padding: 14px;
+                     }
+                 }
+
+                 tbody {
+                     background-color: #ffffff;
+
+                     tr {
+                         border-bottom: 1px solid #e5e7eb;
+                         &:hover {
+                             background-color: #f9fafb;
+                         }
+                     }
+                 }
+             }
+         }
+     }
+ }

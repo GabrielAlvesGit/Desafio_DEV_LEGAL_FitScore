@@ -24,6 +24,7 @@ input,
 textarea {
     font-family: variables.$body-font;
     font-size: variables.$normal-font-size;
+    // border: none;
 }
 
 body {
@@ -50,7 +51,7 @@ a {
     transition: 0.45s all;
 
     &:hover {
-        opacity: 0.8a ;
+        opacity: 0.8;
         transition: 0.45s all;
     }
 }

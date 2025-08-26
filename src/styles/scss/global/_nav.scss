@@ -72,12 +72,12 @@
               top: 71px;
               padding: 64px;
               scrollbar-width: thin;
-              right: -999px;
+              left: -999px;
               transition: all .8s ease;
               opacity: 0;
 
               &--active {
-                  right: 0;
+                  left: 0;
                   transition: all .4s ease;
                   opacity: 1;
               }
