@@ -24,8 +24,7 @@ graph LR
 
 ## 🏗️ Diagrama da Arquitetura da Aplicação
 
-<img width="951" height="533" alt="Diagrama sem nome drawio (2)" src="https://github.com/user-attachments/assets/c3f9d814-2e3a-426f-939c-ebf184e64067" />
-
+<img width="952" height="533" alt="Diagrama sem nome drawio (3)" src="https://github.com/user-attachments/assets/8832846e-46aa-4412-9cd9-d651a7328524" />
 
 <!-- Tecnologias utilizadas no projeto -->
 
