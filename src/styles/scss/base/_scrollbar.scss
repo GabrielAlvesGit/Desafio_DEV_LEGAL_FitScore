@@ -1,0 +1,15 @@
+@use './variables';
+
+/* ======= Scroll Styles ======= */
+::-webkit-scrollbar-track {
+  background-color: variables.$primary-color-white;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, hsl(238, 97%, 36%) -2%, rgba(0, 0, 0, 0.9) 117%);
+  border-radius: 5px;
+}

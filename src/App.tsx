@@ -10,6 +10,7 @@ import './styles/scss/base/tailwind.css'
 /* ============ Header e Footer - Global =========== */
 import Header from './components/global/Header';
 import Footer from './components/global/Footer';
+import ScrollUp from './components/global/scrollup';
 
 const App: React.FC = () => {
     const location = useLocation();
@@ -19,6 +20,7 @@ const App: React.FC = () => {
             <Header />
                 <Outlet />
             <Footer />
+            <ScrollUp />
         </>
     );
 };

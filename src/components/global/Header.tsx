@@ -39,7 +39,7 @@ const Header: React.FC = () => {
   }, [location]);
 
   return (
-    <header className="header">
+    <header className="header" id="header">
       <nav className={`nav ${isMenuOpen ? 'nav--active' : ''} container`}>
         <article className="nav__logo">
           <Link to="/" className="nav__logo__link">

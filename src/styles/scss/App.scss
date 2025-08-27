@@ -8,12 +8,14 @@
 @use './base/variables';
 @use './base/grid.scss';
 @use './base/reset.scss';
-@use './base/font';
+@use './base/font.scss';
+@use './base/scrollbar.scss';
 
 /*=============== Global ===============*/
 @use './global/header';
 @use './global/nav';
 @use './global/footer';
+@use './global/scrollup';
 
 /*=============== Pages ===============*/
 @use './pages/banner';
