@@ -235,7 +235,7 @@ export default function FitScoreForm() {
       {questions.map(({ key, label }) => (
         <div key={key} className="space-y-3">
           <label className="block text-sm font-medium text-gray-700">{label}</label>
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap gap-4 fitScoreForm__radioGroup">
             {[1, 2, 3, 4, 5].map((value) => (
               <div key={value} className="flex items-center space-x-2">
                 <input
@@ -365,7 +365,7 @@ export default function FitScoreForm() {
             ) : (
               <button
                 type="submit"
-                className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors fitScoreForm__btnNext"
                 disabled={isSubmitting || !isStepValid()}
               >
                 {isSubmitting ? (
