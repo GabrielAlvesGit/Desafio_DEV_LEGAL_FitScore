@@ -71,11 +71,11 @@ export default function FitScoreForm() {
     const finalScore = Math.round(weightedScore * 20); // Scale to 0–100
 
     // Debugging logs
-    console.log("Performance Score:", performanceScore);
-    console.log("Energia Score:", energiaScore);
-    console.log("Cultura Score:", culturaScore);
-    console.log("Weighted Score:", weightedScore);
-    console.log("Final Score:", finalScore);
+    // console.log("Performance Score:", performanceScore);
+    // console.log("Energia Score:", energiaScore);
+    // console.log("Cultura Score:", culturaScore);
+    // console.log("Weighted Score:", weightedScore);
+    // console.log("Final Score:", finalScore);
 
     return finalScore;
   };
@@ -96,10 +96,10 @@ export default function FitScoreForm() {
       });
       if (!response.ok) throw new Error(`Erro no webhook: ${response.status}`);
       const data = await response.json();
-      console.log("Resposta do webhook:", data);
+      // console.log("Resposta do webhook:", data);
       return { success: true };
     } catch (err) {
-      console.error("Erro ao enviar para o webhook:", err);
+      // console.error("Erro ao enviar para o webhook:", err);
       return { success: false, error: err };
     }
   };
