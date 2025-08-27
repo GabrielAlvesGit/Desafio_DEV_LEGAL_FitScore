@@ -17,10 +17,15 @@
 
 ```mermaid
 graph LR
-    A[React App] --> B[Supabase]
+    A[React] --> B[Supabase]
     A --> C[n8n Webhook]
     C --> D[Email Notification]
 ```
+
+## 🏗️ Diagrama da Arquitetura da Aplicação
+
+<img width="951" height="533" alt="Diagrama sem nome drawio (2)" src="https://github.com/user-attachments/assets/c3f9d814-2e3a-426f-939c-ebf184e64067" />
+
 
 <!-- Tecnologias utilizadas no projeto -->
 
@@ -193,10 +198,15 @@ npm start
 - **Webhooks**: Desacoplamento e escalabilidade
 
 
-## 👨‍💻 Desenvolvido por
+## 👨‍💻 Layout
 
-**Seu Nome** - [GitHub](https://github.com/seu-usuario) - [LinkedIn](https://linkedin.com/in/seu-perfil)
+### Página - Formulário FitScore
 
----
+<img width="1366" height="1028" alt="BusinessIA-08-26-2025_09_04_PM" src="https://github.com/user-attachments/assets/cc280100-5be7-44b8-aae9-557e5f2d9b55" />
 
-*Este projeto foi desenvolvido como parte do desafio técnico para DEV Pleno na PSL LEGAL.*
+
+### Página - Dashboard
+
+<img width="1366" height="1556" alt="BusinessIA-08-26-2025_09_08_PM" src="https://github.com/user-attachments/assets/2bc8a765-71ae-402e-bc81-2458b6cec8af" />
+
+
