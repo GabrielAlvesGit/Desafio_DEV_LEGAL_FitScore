@@ -1,21 +1,21 @@
 {
-  "name": "My workflow 13",
+  "name": "Candidate Email Feedback System",
   "nodes": [
     {
       "parameters": {
         "httpMethod": "POST",
         "path": "candidate-evaluation",
+        "responseMode": "responseNode",
         "options": {}
       },
-      "id": "8ce55560-4fff-450f-a6c0-be35bf4a4c06",
-      "name": "Webhook - Receber Avaliação",
+      "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "name": "Webhook - Receber Dados",
       "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
       "position": [
-        -448,
-        112
-      ],
-      "typeVersion": 2.1,
-      "webhookId": "71032280-d211-4e83-b668-97853303d3f5"
+        240,
+        300
+      ]
     },
     {
       "parameters": {
@@ -23,38 +23,25 @@
           "options": {
             "caseSensitive": true,
             "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
+            "typeValidation": "strict"
           },
           "conditions": [
             {
-              "id": "067a6463-896e-4dbf-b182-260e1b47aa6d",
-              "leftValue": "={{ $(\"Webhook - Receber Avaliação\").item.json.body.classification }}",
+              "id": "c7b3d2c1-9b1a-4f2e-8c3d-1a2b3c4d5e6f",
+              "leftValue": "={{ $json.classification }}",
               "rightValue": "Fit Altíssimo",
               "operator": {
                 "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
+                "operation": "equals"
               }
             },
             {
-              "id": "3fd3d27b-59b9-4df3-9184-c0d0996d4c15",
-              "leftValue": "={{ $(\"Webhook - Receber Avaliação\").item.json.body.classification }}",
+              "id": "d8c4e3d2-ac2b-5g3f-9d4e-2b3c4d5e6f7g",
+              "leftValue": "={{ $json.classification }}",
               "rightValue": "Fit Aprovado",
               "operator": {
                 "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
-              }
-            },
-            {
-              "id": "4ae8c32f-67b2-4ef5-9285-d1e1087b5c26",
-              "leftValue": "={{ $(\"Webhook - Receber Avaliação\").item.json.body.classification }}",
-              "rightValue": "Fit Questionável",
-              "operator": {
-                "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
+                "operation": "equals"
               }
             }
           ],
@@ -62,89 +49,165 @@
         },
         "options": {}
       },
-      "id": "9e16bbe3-c31a-4804-88eb-e34941a4df09",
-      "name": "É Aprovado/Questionável?",
+      "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+      "name": "Classificar Candidato",
       "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
       "position": [
-        -224,
-        112
-      ],
-      "typeVersion": 2.2
+        460,
+        300
+      ]
     },
     {
       "parameters": {
-        "fromEmail": "noreply@legal.com",
-        "toEmail": "={{ $(\"Webhook - Receber Avaliação\").item.json.body.email }}",
-        "subject": "🎉 Parabéns! Você foi APROVADO no FitScore LEGAL!",
-        "html": "=<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px;\">\n  <!-- Header -->\n  <div style=\"text-align: center; color: white; margin-bottom: 30px;\">\n    <h1 style=\"font-size: 32px; margin: 0 0 10px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);\">🎉 PARABÉNS!</h1>\n    <h2 style=\"font-size: 24px; margin: 0; opacity: 0.9;\">{{ $(\"Webhook - Receber Avaliação\").item.json.body.name }}</h2>\n  </div>\n\n  <!-- Score Card -->\n  <div style=\"background: white; padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.15);\">\n    <div style=\"color: {{ $(\"Webhook - Receber Avaliação\").item.json.body.classification === 'Fit Altíssimo' ? '#16a34a' : $(\"Webhook - Receber Avaliação\").item.json.body.classification === 'Fit Aprovado' ? '#2563eb' : '#d97706' }}; font-size: 18px; font-weight: 600; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;\">{{ $(\"Webhook - Receber Avaliação\").item.json.body.classification }}</div>\n    \n    <div style=\"font-size: 64px; font-weight: bold; color: #2563eb; margin: 20px 0; text-shadow: 2px 2px 4px rgba(37,99,235,0.2);\">{{ $(\"Webhook - Receber Avaliação\").item.json.body.fit_score }}</div>\n    \n    <div style=\"color: #6b7280; font-size: 16px; margin-bottom: 25px;\">pontos no FitScore™</div>\n    \n    <!-- Breakdown Scores -->\n    <div style=\"display: flex; justify-content: space-around; border-top: 2px solid #f3f4f6; padding-top: 20px;\">\n      <div style=\"text-align: center;\">\n        <div style=\"color: #374151; font-weight: bold; font-size: 20px;\">{{ $(\"Webhook - Receber Avaliação\").item.json.body.performance_scores ? Math.round((Object.values($(\"Webhook - Receber Avaliação\").item.json.body.performance_scores).reduce((a,b) => Number(a) + Number(b), 0) / Object.keys($(\"Webhook - Receber Avaliação\").item.json.body.performance_scores).length) * 10) / 10 : 0 }}</div>\n        <div style=\"color: #6b7280; font-size: 12px; text-transform: uppercase; margin-top: 5px;\">Performance</div>\n      </div>\n      <div style=\"text-align: center;\">\n        <div style=\"color: #374151; font-weight: bold; font-size: 20px;\">{{ $(\"Webhook - Receber Avaliação\").item.json.body.energia_scores ? Math.round((Object.values($(\"Webhook - Receber Avaliação\").item.json.body.energia_scores).reduce((a,b) => Number(a) + Number(b), 0) / Object.keys($(\"Webhook - Receber Avaliação\").item.json.body.energia_scores).length) * 10) / 10 : 0 }}</div>\n        <div style=\"color: #6b7280; font-size: 12px; text-transform: uppercase; margin-top: 5px;\">Energia</div>\n      </div>\n      <div style=\"text-align: center;\">\n        <div style=\"color: #374151; font-weight: bold; font-size: 20px;\">{{ $(\"Webhook - Receber Avaliação\").item.json.body.cultura_scores ? Math.round((Object.values($(\"Webhook - Receber Avaliação\").item.json.body.cultura_scores).reduce((a,b) => Number(a) + Number(b), 0) / Object.keys($(\"Webhook - Receber Avaliação\").item.json.body.cultura_scores).length) * 10) / 10 : 0 }}</div>\n        <div style=\"color: #6b7280; font-size: 12px; text-transform: uppercase; margin-top: 5px;\">Cultura</div>\n      </div>\n    </div>\n  </div>\n\n  <!-- Next Steps -->\n  <div style=\"background: rgba(255,255,255,0.95); padding: 25px; border-radius: 12px; margin-bottom: 20px;\">\n    {{ $(\"Webhook - Receber Avaliação\").item.json.body.classification === 'Fit Altíssimo' ? \n      '<h3 style=\"color: #166534; margin: 0 0 15px 0; font-size: 20px;\">🚀 Próximos Passos</h3><ul style=\"color: #166534; margin: 0; padding-left: 20px; line-height: 1.6;\"><li>Nossa equipe de RH entrará em contato em <strong>até 24 horas</strong></li><li>Prepare-se para uma conversa mais aprofundada sobre suas experiências</li><li>Tenha em mãos seu portfólio e projetos recentes</li></ul>' : \n      $(\"Webhook - Receber Avaliação\").item.json.body.classification === 'Fit Aprovado' ? \n      '<h3 style=\"color: #1e40af; margin: 0 0 15px 0; font-size: 20px;\">🎯 Próximos Passos</h3><ul style=\"color: #1e40af; margin: 0; padding-left: 20px; line-height: 1.6;\"><li>Nossa equipe de RH entrará em contato em <strong>até 48 horas</strong></li><li>Prepare-se para uma entrevista técnica</li><li>Manteremos seu perfil em nossa base de talentos</li></ul>' : \n      '<h3 style=\"color: #92400e; margin: 0 0 15px 0; font-size: 20px;\">💪 Desenvolvimento</h3><ul style=\"color: #92400e; margin: 0; padding-left: 20px; line-height: 1.6;\"><li>Continue se desenvolvendo nas áreas identificadas</li><li>Acompanhe nossas vagas futuras</li><li>Seu perfil ficará em nossa base para novas oportunidades</li></ul>' \n    }}\n  </div>\n\n  <!-- Footer -->\n  <div style=\"text-align: center; color: rgba(255,255,255,0.8); font-size: 14px;\">\n    <p style=\"margin: 0;\">{{ $(\"Webhook - Receber Avaliação\").item.json.body.classification === 'Fit Altíssimo' ? '✨ Você está entre os <strong>melhores candidatos</strong> avaliados!' : $(\"Webhook - Receber Avaliação\").item.json.body.classification === 'Fit Aprovado' ? '👏 Você demonstrou <strong>bom alinhamento</strong> com nossa cultura!' : '🌟 Continue <strong>evoluindo</strong> profissionalmente!' }}</p>\n    <p style=\"margin: 10px 0 0 0;\">© 2024 PSL LEGAL - FitScore™</p>\n  </div>\n</div>",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "smtpApi",
+        "fromEmail": "noreply@legaltech.com.br",
+        "toEmail": "={{ $json.email }}",
+        "subject": "🎉 Parabéns! Você foi APROVADO no processo seletivo da LEGAL",
+        "emailType": "html",
+        "message": "<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Resultado - Processo Seletivo LEGAL</title>\n    <style>\n        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f8fafc; }\n        .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n        .email-card { background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; }\n        .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; text-align: center; padding: 40px 20px; }\n        .header h1 { margin: 0; font-size: 28px; font-weight: bold; }\n        .header p { margin: 10px 0 0 0; font-size: 16px; opacity: 0.9; }\n        .content { padding: 40px 30px; }\n        .score-section { text-align: center; margin: 30px 0; }\n        .score-circle { display: inline-block; width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; text-align: center; line-height: 120px; font-size: 32px; font-weight: bold; margin: 20px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }\n        .classification { display: inline-block; background: #d1fae5; color: #059669; padding: 12px 24px; border-radius: 25px; font-weight: bold; font-size: 16px; margin: 10px 0; }\n        .next-steps { background: #f0fdf4; border-left: 4px solid #10b981; padding: 20px; margin: 30px 0; border-radius: 0 8px 8px 0; }\n        .footer { background: #f8fafc; text-align: center; padding: 30px; color: #6b7280; font-size: 14px; border-top: 1px solid #e5e7eb; }\n        .btn { display: inline-block; background: #10b981; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }\n        .highlight { background: #fef3c7; padding: 2px 6px; border-radius: 4px; font-weight: bold; }\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <div class=\"email-card\">\n            <div class=\"header\">\n                <h1>🎉 APROVADO!</h1>\n                <p>Processo Seletivo LEGAL - Resultado Final</p>\n            </div>\n            \n            <div class=\"content\">\n                <p>Olá <strong>{{ $json.name }}</strong>,</p>\n                \n                <p>É com <span class=\"highlight\">grande satisfação</span> que informamos que você foi <strong>APROVADO</strong> em nosso processo seletivo!</p>\n                \n                <div class=\"score-section\">\n                    <div class=\"score-circle\">{{ $json.fit_score }}</div>\n                    <div class=\"classification\">{{ $json.classification }}</div>\n                    <p><strong>Sua pontuação final:</strong> {{ $json.fit_score }} pontos</p>\n                </div>\n                \n                <p>Seu perfil demonstrou excelente alinhamento com:</p>\n                <ul>\n                    <li>✅ <strong>Performance</strong> - Experiência técnica e qualidade de entregas</li>\n                    <li>✅ <strong>Energia</strong> - Disponibilidade e capacidade de cumprir prazos</li>\n                    <li>✅ <strong>Cultura LEGAL</strong> - Valores de transparência, colaboração e inovação</li>\n                </ul>\n                \n                <div class=\"next-steps\">\n                    <h3>🚀 Próximos Passos</h3>\n                    <p>Nossa equipe de RH entrará em contato em até <strong>2 dias úteis</strong> para:</p>\n                    <ul>\n                        <li>Detalhar a posição e responsabilidades</li>\n                        <li>Alinhar expectativas e condições</li>\n                        <li>Definir a data de início</li>\n                    </ul>\n                </div>\n                \n                <p>Estamos muito animados para tê-lo(a) em nossa equipe! 🎊</p>\n                \n                <p>Bem-vindo(a) à família LEGAL! 💙</p>\n            </div>\n            \n            <div class=\"footer\">\n                <p><strong>LEGAL - Tecnologia Jurídica</strong></p>\n                <p>Este é um e-mail automático. Em caso de dúvidas, responda este e-mail.</p>\n                <p>© 2025 LEGAL. Todos os direitos reservados.</p>\n            </div>\n        </div>\n    </div>\n</body>\n</html>",
         "options": {}
       },
-      "id": "b828259d-2f1f-4125-b039-6f59f0f1234b",
-      "name": "Email - Aprovado",
+      "id": "b2c3d4e5-f6g7-8901-2345-678901bcdefg",
+      "name": "Email - APROVADO",
       "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
       "position": [
-        0,
-        0
-      ],
-      "typeVersion": 2.1,
-      "webhookId": "b628de36-54c9-4f21-88bc-fa738b764054",
-      "credentials": {
-        "smtp": {
-          "id": "1HbJQb8JgvGPzjRx",
-          "name": "SMTP account"
-        }
-      }
+        680,
+        200
+      ]
     },
     {
       "parameters": {
-        "fromEmail": "noreply@legal.com",
-        "toEmail": "={{ $(\"Webhook - Receber Avaliação\").item.json.body.email }}",
-        "subject": "📋 Resultado da sua avaliação FitScore LEGAL",
-        "html": "=<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; background-color: #f8f9fa; border-radius: 12px;\">\n  <!-- Header -->\n  <div style=\"text-align: center; margin-bottom: 30px; padding: 25px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 10px; color: white;\">\n    <h1 style=\"font-size: 28px; margin: 0 0 10px 0;\">Olá, {{ $(\"Webhook - Receber Avaliação\").item.json.body.name }}!</h1>\n    <p style=\"margin: 0; opacity: 0.9; font-size: 16px;\">Obrigado por participar do nosso processo seletivo</p>\n  </div>\n\n  <!-- Score Card -->\n  <div style=\"background: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);\">\n    <h2 style=\"color: #374151; margin-bottom: 20px;\">📊 Seu Resultado FitScore™</h2>\n    \n    <div style=\"font-size: 48px; font-weight: bold; color: #2563eb; margin: 20px 0;\">{{ $(\"Webhook - Receber Avaliação\").item.json.body.fit_score }}</div>\n    \n    <div style=\"display: inline-block; padding: 8px 20px; border-radius: 20px; font-weight: 600; background-color: #fee2e2; color: #991b1b;\">{{ $(\"Webhook - Receber Avaliação\").item.json.body.classification }}</div>\n  </div>\n\n  <!-- Message for Fora do Perfil -->\n  <div style=\"background: #fef2f2; border-left: 4px solid #ef4444; padding: 20px; border-radius: 0 8px 8px 0; margin-bottom: 25px;\">\n    <h3 style=\"color: #991b1b; margin: 0 0 10px 0;\">🔄 Não desista!</h3>\n    <p style=\"color: #991b1b; margin: 0; line-height: 1.6;\">Desta vez não houve match, mas continue se desenvolvendo. Processos seletivos são oportunidades de aprendizado e crescimento profissional!</p>\n  </div>\n\n  <!-- Development Areas -->\n  <div style=\"background: white; padding: 25px; border-radius: 8px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);\">\n    <h3 style=\"color: #374151; margin: 0 0 15px 0;\">📈 Áreas de Desenvolvimento</h3>\n    <ul style=\"color: #6b7280; margin: 0; padding-left: 20px; line-height: 1.6;\">\n      <li>Continue investindo no seu desenvolvimento técnico</li>\n      <li>Busque experiências que ampliem seu conhecimento</li>\n      <li>Mantenha-se atualizado com as tendências do mercado</li>\n      <li>Considere cursos ou certificações na sua área</li>\n    </ul>\n  </div>\n\n  <!-- Encouragement -->\n  <div style=\"background: white; padding: 25px; border-radius: 8px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);\">\n    <h3 style=\"color: #374151; margin: 0 0 15px 0;\">💪 Mensagem de Incentivo</h3>\n    <p style=\"color: #6b7280; margin: 0; line-height: 1.6;\">Lembre-se: cada processo seletivo é uma oportunidade única de aprendizado. Continue se dedicando ao seu crescimento profissional e não desista dos seus objetivos. Estamos sempre em busca de novos talentos!</p></div>\n\n  <!-- Footer -->\n  <div style=\"text-align: center; color: #6b7280; font-size: 14px; border-top: 1px solid #e5e7eb; padding-top: 20px;\">\n    <p style=\"margin: 0 0 5px 0;\">Este é um e-mail automático gerado pelo sistema FitScore™</p>\n    <p style=\"margin: 0;\">© 2024 PSL LEGAL</p>\n  </div>\n</div>",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "smtpApi",
+        "fromEmail": "noreply@legaltech.com.br",
+        "toEmail": "={{ $json.email }}",
+        "subject": "📋 Resultado da sua avaliação - Processo Seletivo LEGAL",
+        "emailType": "html",
+        "message": "<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Resultado - Processo Seletivo LEGAL</title>\n    <style>\n        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f8fafc; }\n        .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n        .email-card { background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; }\n        .header { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; text-align: center; padding: 40px 20px; }\n        .header.questionavel { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }\n        .header.reprovado { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }\n        .header h1 { margin: 0; font-size: 28px; font-weight: bold; }\n        .header p { margin: 10px 0 0 0; font-size: 16px; opacity: 0.9; }\n        .content { padding: 40px 30px; }\n        .score-section { text-align: center; margin: 30px 0; }\n        .score-circle { display: inline-block; width: 120px; height: 120px; border-radius: 50%; color: white; text-align: center; line-height: 120px; font-size: 32px; font-weight: bold; margin: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }\n        .score-circle.questionavel { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }\n        .score-circle.reprovado { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }\n        .classification { display: inline-block; padding: 12px 24px; border-radius: 25px; font-weight: bold; font-size: 16px; margin: 10px 0; }\n        .classification.questionavel { background: #fef3c7; color: #d97706; }\n        .classification.reprovado { background: #fecaca; color: #dc2626; }\n        .feedback-section { background: #f8fafc; border-radius: 8px; padding: 20px; margin: 30px 0; }\n        .footer { background: #f8fafc; text-align: center; padding: 30px; color: #6b7280; font-size: 14px; border-top: 1px solid #e5e7eb; }\n        .highlight { background: #fef3c7; padding: 2px 6px; border-radius: 4px; font-weight: bold; }\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <div class=\"email-card\">\n            <div class=\"header {{ $json.classification === 'Fit Questionável' ? 'questionavel' : 'reprovado' }}\">\n                <h1>{{ $json.classification === 'Fit Questionável' ? '📋 Avaliação Concluída' : '📋 Processo Finalizado' }}</h1>\n                <p>Processo Seletivo LEGAL - Resultado Final</p>\n            </div>\n            \n            <div class=\"content\">\n                <p>Olá <strong>{{ $json.name }}</strong>,</p>\n                \n                <p>Agradecemos seu interesse em fazer parte da equipe LEGAL e o tempo dedicado ao nosso processo seletivo.</p>\n                \n                <div class=\"score-section\">\n                    <div class=\"score-circle {{ $json.classification === 'Fit Questionável' ? 'questionavel' : 'reprovado' }}\">{{ $json.fit_score }}</div>\n                    <div class=\"classification {{ $json.classification === 'Fit Questionável' ? 'questionavel' : 'reprovado' }}\">{{ $json.classification }}</div>\n                    <p><strong>Sua pontuação final:</strong> {{ $json.fit_score }} pontos</p>\n                </div>\n                \n                <div class=\"feedback-section\">\n                    <h3>📊 Feedback Detalhado</h3>\n                    {{ $json.classification === 'Fit Questionável' ? \n                    '<p>Seu perfil apresentou pontos positivos, mas algumas áreas precisam de desenvolvimento para alinhamento total com nossa cultura:</p>' : \n                    '<p>Agradecemos sua participação. Embora seu perfil não tenha se adequado aos requisitos desta posição específica:</p>' }}\n                    \n                    <ul>\n                        <li><strong>Performance:</strong> Experiência técnica e qualidade de entregas</li>\n                        <li><strong>Energia:</strong> Disponibilidade e gestão de prazos</li>\n                        <li><strong>Cultura LEGAL:</strong> Alinhamento com nossos valores</li>\n                    </ul>\n                </div>\n                \n                {{ $json.classification === 'Fit Questionável' ? \n                '<p>Recomendamos que continue desenvolvendo suas habilidades e fique atento(a) a futuras oportunidades em nossa empresa.</p>' : \n                '<p>Encorajamos você a se candidatar novamente em futuras oportunidades que surgirem em nossa empresa.</p>' }}\n                \n                <p>Desejamos muito sucesso em sua jornada profissional! 🚀</p>\n            </div>\n            \n            <div class=\"footer\">\n                <p><strong>LEGAL - Tecnologia Jurídica</strong></p>\n                <p>Este é um e-mail automático. Em caso de dúvidas, responda este e-mail.</p>\n                <p>© 2025 LEGAL. Todos os direitos reservados.</p>\n            </div>\n        </div>\n    </div>\n</body>\n</html>",
         "options": {}
       },
-      "id": "e26b94e6-c773-4268-b8f6-ae80e52133b8",
-      "name": "Email - Padrão",
+      "id": "c3d4e5f6-g7h8-9012-3456-789012cdefgh",
+      "name": "Email - NÃO APROVADO",
       "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
       "position": [
-        0,
-        224
-      ],
-      "typeVersion": 2.1,
-      "webhookId": "2cb0a7af-7d92-4cb4-97a7-e78d506e98a3",
-      "credentials": {
-        "smtp": {
-          "id": "1HbJQb8JgvGPzjRx",
-          "name": "SMTP account"
-        }
-      }
+        680,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "operation": "insert",
+        "tableId": "candidates",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "name",
+              "fieldValue": "={{ $json.name }}"
+            },
+            {
+              "fieldId": "email", 
+              "fieldValue": "={{ $json.email }}"
+            },
+            {
+              "fieldId": "fit_score",
+              "fieldValue": "={{ $json.fit_score }}"
+            },
+            {
+              "fieldId": "classification",
+              "fieldValue": "={{ $json.classification }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d4e5f6g7-h8i9-0123-4567-890123defghi",
+      "name": "Salvar no Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"message\": \"Workflow was started\",\n  \"candidate\": \"{{ $json.name }}\",\n  \"classification\": \"{{ $json.classification }}\",\n  \"score\": {{ $json.fit_score }},\n  \"email_sent\": true,\n  \"saved_to_db\": true,\n  \"timestamp\": \"{{ $now.toISO() }}\"\n}",
+        "options": {}
+      },
+      "id": "e5f6g7h8-i9j0-1234-5678-901234efghij",
+      "name": "Resposta Final",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
     }
   ],
-  "pinData": {},
   "connections": {
-    "Webhook - Receber Avaliação": {
+    "Webhook - Receber Dados": {
       "main": [
         [
           {
-            "node": "É Aprovado/Questionável?",
+            "node": "Classificar Candidato",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "É Aprovado/Questionável?": {
+    "Classificar Candidato": {
       "main": [
         [
           {
-            "node": "Email - Aprovado",
+            "node": "Email - APROVADO",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Email - Padrão",
+            "node": "Email - NÃO APROVADO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email - APROVADO": {
+      "main": [
+        [
+          {
+            "node": "Salvar no Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email - NÃO APROVADO": {
+      "main": [
+        [
+          {
+            "node": "Salvar no Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Salvar no Supabase": {
+      "main": [
+        [
+          {
+            "node": "Resposta Final",
             "type": "main",
             "index": 0
           }
@@ -152,14 +215,13 @@
       ]
     }
   },
-  "active": false,
+  "createdAt": "2025-01-27T10:00:00.000Z",
+  "updatedAt": "2025-01-27T10:00:00.000Z",
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "c758247c-0acf-4541-883a-7090fd5a9ea6",
-  "meta": {
-    "instanceId": "43c34b7cc32e1231de7edb497c4f89dd3c1e5bc7b751c2594d5c9f2c9f81ec845c34"
-  },
-  "id": "1nRkbuXAFtOHmxaO",
-  "tags": []
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "versionId": "1"
 }

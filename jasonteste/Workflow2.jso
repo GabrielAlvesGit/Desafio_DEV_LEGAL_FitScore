@@ -1,145 +1,235 @@
 {
-  "name": "Candidate Evaluation Workflow",
+  "name": "Relatório de Aprovados - FitScore ≥ 80",
   "nodes": [
     {
       "parameters": {
-        "httpMethod": "POST",
-        "path": "candidate-evaluation",
-        "responseCode": 200,
-        "responseData": "{\"message\": \"Workflow was started\"}",
-        "options": {}
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 12
+            }
+          ]
+        }
       },
-      "id": "9f7d73bd-c75e-452d-ac65-b1c65abc5fa3",
-      "name": "Webhook - Receber Avaliação",
-      "type": "n8n-nodes-base.webhook",
-      "position": [-96, 176],
-      "typeVersion": 2.1,
-      "webhookId": "71032280-d211-4e83-b668-97853303d3f5"
+      "id": "schedule-trigger",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        300
+      ]
     },
     {
       "parameters": {
-        "options": {}
-      },
-      "id": "debug-001",
-      "name": "Debug - Payload Recebido",
-      "type": "n8n-nodes-base.set",
-      "position": [0, 176],
-      "typeVersion": 1,
-      "set": [
-        {
-          "name": "payload",
-          "value": "={{ JSON.stringify($json.body) }}"
+        "operation": "select",
+        "table": "candidates",
+        "filterType": "manual",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "fit_score",
+              "condition": "gte",
+              "keyValue": "80"
+            }
+          ]
+        },
+        "options": {
+          "queryName": "approved_candidates",
+          "sort": [
+            {
+              "field": "fit_score",
+              "direction": "desc"
+            }
+          ]
         }
-      ]
+      },
+      "id": "get-approved-candidates",
+      "name": "Get Approved Candidates",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-credentials",
+          "name": "Supabase account"
+        }
+      }
     },
     {
       "parameters": {
         "conditions": {
           "options": {
-            "caseSensitive": false,
+            "caseSensitive": true,
             "leftValue": "",
-            "typeValidation": "loose",
-            "version": 2
+            "typeValidation": "strict"
           },
           "conditions": [
             {
-              "id": "067a6463-896e-4dbf-b182-260e1b47aa6d",
-              "leftValue": "={{ $json.body.classification }}",
-              "rightValue": "Fora do Perfil",
+              "id": "condition-check-data",
+              "leftValue": "={{ $json.length }}",
+              "rightValue": 0,
               "operator": {
-                "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
+                "type": "number",
+                "operation": "gt"
               }
             }
           ],
-          "combinator": "or"
+          "combinator": "and"
         },
         "options": {}
       },
-      "id": "f2ef0f71-a120-4b46-960b-8263ee8eff61",
-      "name": "É Fora do Perfil?",
+      "id": "check-has-candidates",
+      "name": "Check Has Candidates",
       "type": "n8n-nodes-base.if",
-      "position": [128, 176],
-      "typeVersion": 2.2
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
     },
     {
       "parameters": {
-        "fromEmail": "noreply@legal.com",
-        "toEmail": "={{ $json.body.email }}",
-        "subject": "🎉 Parabéns! Você foi APROVADO no FitScore LEGAL!",
-        "html": "=<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px;\">\n  <!-- Header -->\n  <div style=\"text-align: center; color: white; margin-bottom: 30px;\">\n    <h1 style=\"font-size: 32px; margin: 0 0 10px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);\">🎉 PARABÉNS!</h1>\n    <h2 style=\"font-size: 24px; margin: 0; opacity: 0.9;\">{{ $json.body.name }}</h2>\n  </div>\n\n  <!-- Score Card -->\n  <div style=\"background: white; padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.15);\">\n    <div style=\"color: {{ $json.body.classification === 'Fit Altíssimo' ? '#16a34a' : $json.body.classification === 'Fit Aprovado' ? '#2563eb' : '#d97706' }}; font-size: 18px; font-weight: 600; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;\">{{ $json.body.classification }}</div>\n    <div style=\"font-size: 64px; font-weight: bold; color: #2563eb; margin: 20px 0; text-shadow: 2px 2px 4px rgba(37,99,235,0.2);\">{{ $json.body.fit_score }}</div>\n    <div style=\"color: #6b7280; font-size: 16px; margin-bottom: 25px;\">pontos no FitScore™</div>\n    <div style=\"display: flex; justify-content: space-around; border-top: 2px solid #f3f4f6; padding-top: 20px;\">\n      <div style=\"text-align: center;\">\n        <div style=\"color: #374151; font-weight: bold; font-size: 20px;\">{{ $json.body.performance_score || 'N/A' }}</div>\n        <div style=\"color: #6b7280; font-size: 12px; text-transform: uppercase; margin-top: 5px;\">Performance</div>\n      </div>\n      <div style=\"text-align: center;\">\n        <div style=\"color: #374151; font-weight: bold; font-size: 20px;\">{{ $json.body.energia_score || 'N/A' }}</div>\n        <div style=\"color: #6b7280; font-size: 12px; text-transform: uppercase; margin-top: 5px;\">Energia</div>\n      </div>\n      <div style=\"text-align: center;\">\n        <div style=\"color: #374151; font-weight: bold; font-size: 20px;\">{{ $json.body.cultura_score || 'N/A' }}</div>\n        <div style=\"color: #6b7280; font-size: 12px; text-transform: uppercase; margin-top: 5px;\">Cultura</div>\n      </div>\n    </div>\n  </div>\n\n  <!-- Next Steps -->\n  <div style=\"background: rgba(255,255,255,0.95); padding: 25px; border-radius: 12px; margin-bottom: 20px;\">\n    {{ $json.body.classification === 'Fit Altíssimo' ? \n      '<h3 style=\"color: #166534; margin: 0 0 15px 0; font-size: 20px;\">🚀 Próximos Passos</h3><ul style=\"color: #166534; margin: 0; padding-left: 20px; line-height: 1.6;\"><li>Nossa equipe de RH entrará em contato em <strong>até 24 horas</strong></li><li>Prepare-se para uma conversa mais aprofundada sobre suas experiências</li><li>Tenha em mãos seu portfólio e projetos recentes</li></ul>' : \n      '<h3 style=\"color: #1e40af; margin: 0 0 15px 0; font-size: 20px;\">🎯 Próximos Passos</h3><ul style=\"color: #1e40af; margin: 0; padding-left: 20px; line-height: 1.6;\"><li>Nossa equipe de RH entrará em contato em <strong>até 48 horas</strong></li><li>Prepare-se para uma entrevista técnica</li><li>Manteremos seu perfil em nossa base de talentos</li></ul>' }}\n  </div>\n\n  <!-- Footer -->\n  <div style=\"text-align: center; color: rgba(255,255,255,0.8); font-size: 14px;\">\n    <p style=\"margin: 0;\">{{ $json.body.classification === 'Fit Altíssimo' ? '✨ Você está entre os <strong>melhores candidatos</strong> avaliados!' : '👏 Você demonstrou <strong>bom alinhamento</strong> com nossa cultura!' }}</p>\n    <p style=\"margin: 10px 0 0 0;\">© 2025 PSL LEGAL - FitScore™</p>\n  </div>\n</div>",
-        "options": {}
+        "jsCode": "// CONFIGURAÇÃO DO GESTOR - EDITE AQUI\nconst GESTOR_EMAIL = 'gestor@empresa.com'; // 👈 ALTERE PARA O EMAIL DO GESTOR\n\n// Processar dados dos candidatos aprovados\nconst candidates = $input.all();\n\nif (!candidates || candidates.length === 0) {\n  return [];\n}\n\nconst totalApproved = candidates.length;\nconst currentDate = new Date().toLocaleDateString('pt-BR');\nconst currentTime = new Date().toLocaleTimeString('pt-BR');\n\n// Calcular estatísticas\nconst avgScore = Math.round(candidates.reduce((sum, c) => sum + c.fit_score, 0) / candidates.length);\nconst maxScore = Math.max(...candidates.map(c => c.fit_score));\nconst minScore = Math.min(...candidates.map(c => c.fit_score));\n\n// Criar tabela HTML com os candidatos\nlet tableRows = '';\ncandidates.forEach((candidate, index) => {\n  const scoreColor = candidate.fit_score >= 90 ? '#2e7d32' : \n                    candidate.fit_score >= 85 ? '#f57c00' : '#d32f2f';\n  \n  tableRows += `\n    <tr style=\"background-color: ${index % 2 === 0 ? '#f8f9fa' : '#ffffff'}; border-bottom: 1px solid #dee2e6;\">\n      <td style=\"padding: 12px; text-align: center; font-weight: bold;\">${index + 1}</td>\n      <td style=\"padding: 12px; font-weight: 500;\">${candidate.name}</td>\n      <td style=\"padding: 12px; color: #6c757d;\">${candidate.email}</td>\n      <td style=\"padding: 12px; text-align: center; font-weight: bold; color: ${scoreColor};\">${candidate.fit_score}</td>\n      <td style=\"padding: 12px; text-align: center;\">\n        <span style=\"background-color: #d4edda; color: #155724; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;\">\n          ${candidate.classification || 'APROVADO'}\n        </span>\n      </td>\n      <td style=\"padding: 12px; color: #6c757d; font-size: 14px;\">${new Date(candidate.created_at).toLocaleDateString('pt-BR')}</td>\n    </tr>\n  `;\n});\n\n// Template do email HTML\nconst htmlContent = `\n<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Relatório de Candidatos Aprovados</title>\n</head>\n<body style=\"font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 1000px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;\">\n    <div style=\"background-color: white; border-radius: 10px; padding: 30px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);\">\n        <!-- Header -->\n        <div style=\"text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid #007bff;\">\n            <h1 style=\"color: #007bff; margin: 0; font-size: 28px; font-weight: 700;\">📊 RELATÓRIO DE CANDIDATOS APROVADOS</h1>\n            <p style=\"color: #6c757d; margin: 10px 0 0 0; font-size: 16px;\">Departamento LEGAL | Gerado em ${currentDate} às ${currentTime}</p>\n        </div>\n\n        <!-- Estatísticas -->\n        <div style=\"display: flex; justify-content: space-around; margin-bottom: 30px; background-color: #f8f9fa; padding: 20px; border-radius: 8px;\">\n            <div style=\"text-align: center; flex: 1;\">\n                <h3 style=\"color: #28a745; font-size: 32px; margin: 0;\">${totalApproved}</h3>\n                <p style=\"color: #6c757d; margin: 5px 0 0 0; font-weight: 500;\">Total Aprovados</p>\n            </div>\n            <div style=\"text-align: center; flex: 1; border-left: 2px solid #dee2e6; border-right: 2px solid #dee2e6;\">\n                <h3 style=\"color: #007bff; font-size: 32px; margin: 0;\">${avgScore}</h3>\n                <p style=\"color: #6c757d; margin: 5px 0 0 0; font-weight: 500;\">Score Médio</p>\n            </div>\n            <div style=\"text-align: center; flex: 1;\">\n                <h3 style=\"color: #ffc107; font-size: 32px; margin: 0;\">${maxScore}</h3>\n                <p style=\"color: #6c757d; margin: 5px 0 0 0; font-weight: 500;\">Maior Score</p>\n            </div>\n        </div>\n\n        <!-- Critério de Filtro -->\n        <div style=\"background-color: #e3f2fd; padding: 15px; border-radius: 6px; margin-bottom: 25px; border-left: 4px solid #2196f3;\">\n            <p style=\"margin: 0; font-weight: 500; color: #1976d2;\">\n                <strong>📋 Critério:</strong> Candidatos com FitScore ≥ 80 pontos\n            </p>\n        </div>\n\n        <!-- Tabela de Candidatos -->\n        <div style=\"margin-bottom: 30px;\">\n            <h2 style=\"color: #495057; font-size: 20px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #e9ecef;\">📋 Lista de Candidatos Aprovados</h2>\n            <div style=\"overflow-x: auto;\">\n                <table style=\"width: 100%; border-collapse: collapse; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);\">\n                    <thead>\n                        <tr style=\"background-color: #007bff; color: white;\">\n                            <th style=\"padding: 15px; text-align: center; font-weight: 600;\">#</th>\n                            <th style=\"padding: 15px; text-align: left; font-weight: 600;\">Nome</th>\n                            <th style=\"padding: 15px; text-align: left; font-weight: 600;\">Email</th>\n                            <th style=\"padding: 15px; text-align: center; font-weight: 600;\">FitScore</th>\n                            <th style=\"padding: 15px; text-align: center; font-weight: 600;\">Status</th>\n                            <th style=\"padding: 15px; text-align: center; font-weight: 600;\">Data</th>\n                        </tr>\n                    </thead>\n                    <tbody>\n                        ${tableRows}\n                    </tbody>\n                </table>\n            </div>\n        </div>\n\n        <!-- Legenda de Scores -->\n        <div style=\"background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 25px;\">\n            <h3 style=\"color: #495057; margin: 0 0 15px 0; font-size: 16px;\">🎯 Legenda de Scores:</h3>\n            <div style=\"display: flex; gap: 20px; flex-wrap: wrap;\">\n                <div style=\"display: flex; align-items: center; gap: 8px;\">\n                    <div style=\"width: 16px; height: 16px; background-color: #2e7d32; border-radius: 50%;\"></div>\n                    <span style=\"font-size: 14px; color: #495057;\">90+ pontos: Excelente</span>\n                </div>\n                <div style=\"display: flex; align-items: center; gap: 8px;\">\n                    <div style=\"width: 16px; height: 16px; background-color: #f57c00; border-radius: 50%;\"></div>\n                    <span style=\"font-size: 14px; color: #495057;\">85-89 pontos: Muito Bom</span>\n                </div>\n                <div style=\"display: flex; align-items: center; gap: 8px;\">\n                    <div style=\"width: 16px; height: 16px; background-color: #d32f2f; border-radius: 50%;\"></div>\n                    <span style=\"font-size: 14px; color: #495057;\">80-84 pontos: Bom</span>\n                </div>\n            </div>\n        </div>\n\n        <!-- Rodapé -->\n        <div style=\"text-align: center; padding-top: 20px; border-top: 2px solid #e9ecef; color: #6c757d; font-size: 14px;\">\n            <p style=\"margin: 0;\">🤖 <strong>Relatório Automático</strong> | Sistema de RH | Executado a cada 12 horas</p>\n            <p style=\"margin: 5px 0 0 0;\">Para alterar o email do gestor, edite o código do workflow</p>\n        </div>\n    </div>\n</body>\n</html>\n`;\n\n// Texto simples alternativo\nconst textContent = `\nRELATÓRIO DE CANDIDATOS APROVADOS\nDepartamento LEGAL | ${currentDate} ${currentTime}\n\nESTATÍSTICAS:\n- Total de Aprovados: ${totalApproved}\n- Score Médio: ${avgScore}\n- Maior Score: ${maxScore}\n- Menor Score: ${minScore}\n\nCRITÉRIO: Candidatos com FitScore >= 80\n\nLISTA DE CANDIDATOS:\n${candidates.map((c, i) => `${i+1}. ${c.name} (${c.email}) - Score: ${c.fit_score}`).join('\\n')}\n\n---\nRelatório automático gerado pelo sistema de RH\n`;\n\nreturn [{\n  managerEmail: GESTOR_EMAIL,\n  totalApproved,\n  avgScore,\n  maxScore,\n  minScore,\n  candidates,\n  htmlContent,\n  textContent,\n  subject: `📊 Relatório de Aprovados | ${totalApproved} candidato(s) | ${currentDate}`,\n  currentDate,\n  currentTime\n}];"
       },
-      "id": "51a2d1c9-36f0-44e5-a73c-6c7063e85d75",
-      "name": "Email - Aprovado",
+      "id": "process-candidates-data",
+      "name": "Process Candidates Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@empresa.com",
+        "toEmail": "={{ $json.managerEmail }}",
+        "subject": "={{ $json.subject }}",
+        "emailType": "html",
+        "message": "={{ $json.htmlContent }}",
+        "options": {
+          "appendAttribution": false,
+          "allowUnauthorizedCerts": false
+        }
+      },
+      "id": "send-email-report",
+      "name": "Send Email Report",
       "type": "n8n-nodes-base.emailSend",
-      "position": [352, 64],
       "typeVersion": 2.1,
+      "position": [
+        1120,
+        220
+      ],
       "credentials": {
         "smtp": {
-          "id": "1HbJQb8JgvGPzjRx",
+          "id": "smtp-credentials",
           "name": "SMTP account"
         }
       }
     },
     {
       "parameters": {
-        "fromEmail": "noreply@legal.com",
-        "toEmail": "={{ $json.body.email }}",
-        "subject": "📋 Resultado da sua avaliação FitScore LEGAL",
-        "html": "=<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; background-color: #f8f9fa; border-radius: 12px;\">\n  <!-- Header -->\n  <div style=\"text-align: center; margin-bottom: 30px; padding: 25px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 10px; color: white;\">\n    <h1 style=\"font-size: 28px; margin: 0 0 10px 0;\">Olá, {{ $json.body.name }}!</h1>\n    <p style=\"margin: 0; opacity: 0.9; font-size: 16px;\">Resultado da sua avaliação FitScore LEGAL</p>\n  </div>\n\n  <!-- Score Card -->\n  <div style=\"background: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);\">\n    <h2 style=\"color: #374151; margin-bottom: 20px;\">📊 Seu Resultado FitScore™</h2>\n    <div style=\"font-size: 48px; font-weight: bold; color: #2563eb; margin: 20px 0;\">{{ $json.body.fit_score || 'N/A' }}</div>\n    <div style=\"display: inline-block; padding: 8px 20px; border-radius: 20px; font-weight: 600; background-color: #fee2e2; color: #991b1b;\">{{ $json.body.classification }}</div>\n    <div style=\"display: flex; justify-content: space-around; border-top: 2px solid #f3f4f6; padding-top: 20px; margin-top: 20px;\">\n      <div style=\"text-align: center;\">\n        <div style=\"color: #374151; font-weight: bold; font-size: 20px;\">{{ $json.body.performance_score || 'N/A' }}</div>\n        <div style=\"color: #6b7280; font-size: 12px; text-transform: uppercase; margin-top: 5px;\">Performance</div>\n      </div>\n      <div style=\"text-align: center;\">\n        <div style=\"color: #374151; font-weight: bold; font-size: 20px;\">{{ $json.body.energia_score || 'N/A' }}</div>\n        <div style=\"color: #6b7280; font-size: 12px; text-transform: uppercase; margin-top: 5px;\">Energia</div>\n      </div>\n      <div style=\"text-align: center;\">\n        <div style=\"color: #374151; font-weight: bold; font-size: 20px;\">{{ $json.body.cultura_score || 'N/A' }}</div>\n        <div style=\"color: #6b7280; font-size: 12px; text-transform: uppercase; margin-top: 5px;\">Cultura</div>\n      </div>\n    </div>\n  </div>\n\n  <!-- Message for Fora do Perfil -->\n  <div style=\"background: #fef2f2; border-left: 4px solid #ef4444; padding: 20px; border-radius: 0 8px 8px 0; margin-bottom: 25px;\">\n    <h3 style=\"color: #991b1b; margin: 0 0 10px 0;\">🔄 Não desista!</h3>\n    <p style=\"color: #991b1b; margin: 0; line-height: 1.6;\">Desta vez não houve match, mas continue se desenvolvendo. Processos seletivos são oportunidades de aprendizado e crescimento profissional!</p>\n  </div>\n\n  <!-- Development Areas -->\n  <div style=\"background: white; padding: 25px; border-radius: 8px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);\">\n    <h3 style=\"color: #374151; margin: 0 0 15px 0;\">📈 Áreas de Desenvolvimento</h3>\n    <ul style=\"color: #6b7280; margin: 0; padding-left: 20px; line-height: 1.6;\">\n      <li>Continue investindo no seu desenvolvimento técnico</li>\n      <li>Busque experiências que ampliem seu conhecimento</li>\n      <li>Mantenha-se atualizado com as tendências do mercado</li>\n      <li>Considere cursos ou certificações na sua área</li>\n    </ul>\n  </div>\n\n  <!-- Encouragement -->\n  <div style=\"background: white; padding: 25px; border-radius: 8px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);\">\n    <h3 style=\"color: #374151; margin: 0 0 15px 0;\">💪 Mensagem de Incentivo</h3>\n    <p style=\"color: #6b7280; margin: 0; line-height: 1.6;\">Lembre-se: cada processo seletivo é uma oportunidade única de aprendizado. Continue se dedicando ao seu crescimento profissional e não desista dos seus objetivos. Estamos sempre em busca de novos talentos!</p>\n  </div>\n\n  <!-- Footer -->\n  <div style=\"text-align: center; color: #6b7280; font-size: 14px; border-top: 1px solid #e5e7eb; padding-top: 20px;\">\n    <p style=\"margin: 0 0 5px 0;\">Este é um e-mail automático gerado pelo sistema FitScore™</p>\n    <p style=\"margin: 0;\">© 2025 PSL LEGAL</p>\n  </div>\n</div>",
-        "options": {}
+        "jsCode": "// CONFIGURAÇÃO DO GESTOR - EDITE AQUI\nconst GESTOR_EMAIL = 'gestor@empresa.com'; // 👈 ALTERE PARA O EMAIL DO GESTOR\n\n// Caso não haja candidatos aprovados\nconst currentDate = new Date().toLocaleDateString('pt-BR');\nconst currentTime = new Date().toLocaleTimeString('pt-BR');\n\nconst htmlContent = `\n<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Relatório de Candidatos - Nenhum Aprovado</title>\n</head>\n<body style=\"font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;\">\n    <div style=\"background-color: white; border-radius: 10px; padding: 30px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);\">\n        <div style=\"text-align: center; margin-bottom: 30px;\">\n            <h1 style=\"color: #ffc107; margin: 0; font-size: 24px;\">⚠️ RELATÓRIO DE CANDIDATOS</h1>\n            <p style=\"color: #6c757d; margin: 10px 0 0 0;\">Departamento LEGAL | ${currentDate} ${currentTime}</p>\n        </div>\n        \n        <div style=\"background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 20px; border-radius: 8px; text-align: center;\">\n            <h2 style=\"color: #856404; margin: 0 0 15px 0;\">Nenhum candidato aprovado encontrado</h2>\n            <p style=\"color: #856404; margin: 0;\">Não há candidatos com FitScore ≥ 80 no momento.</p>\n        </div>\n        \n        <div style=\"text-align: center; padding-top: 20px; border-top: 2px solid #e9ecef; color: #6c757d; font-size: 14px; margin-top: 30px;\">\n            <p style=\"margin: 0;\">🤖 Relatório Automático | Sistema de RH</p>\n            <p style=\"margin: 5px 0 0 0;\">Para alterar o email do gestor, edite o código do workflow</p>\n        </div>\n    </div>\n</body>\n</html>\n`;\n\nreturn [{\n  managerEmail: GESTOR_EMAIL,\n  subject: `📊 Relatório de Aprovados | 0 candidatos | ${currentDate}`,\n  htmlContent,\n  currentDate,\n  currentTime\n}];"
       },
-      "id": "2547dc86-9085-425d-bc59-017e617bfa71",
-      "name": "Email - Fora do Perfil",
+      "id": "no-candidates-message",
+      "name": "No Candidates Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@empresa.com",
+        "toEmail": "={{ $json.managerEmail }}",
+        "subject": "={{ $json.subject }}",
+        "emailType": "html",
+        "message": "={{ $json.htmlContent }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "send-no-candidates-email",
+      "name": "Send No Candidates Email",
       "type": "n8n-nodes-base.emailSend",
-      "position": [352, 288],
       "typeVersion": 2.1,
+      "position": [
+        1120,
+        420
+      ],
       "credentials": {
         "smtp": {
-          "id": "1HbJQb8JgvGPzjRx",
+          "id": "smtp-credentials",
           "name": "SMTP account"
         }
       }
     }
   ],
-  "pinData": {},
   "connections": {
-    "Webhook - Receber Avaliação": {
+    "Schedule Trigger": {
       "main": [
         [
           {
-            "node": "Debug - Payload Recebido",
+            "node": "Get Approved Candidates",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Debug - Payload Recebido": {
+    "Get Approved Candidates": {
       "main": [
         [
           {
-            "node": "É Fora do Perfil?",
+            "node": "Check Has Candidates",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "É Fora do Perfil?": {
+    "Check Has Candidates": {
       "main": [
         [
           {
-            "node": "Email - Fora do Perfil",
+            "node": "Process Candidates Data",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Email - Aprovado",
+            "node": "No Candidates Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Candidates Data": {
+      "main": [
+        [
+          {
+            "node": "Send Email Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No Candidates Message": {
+      "main": [
+        [
+          {
+            "node": "Send No Candidates Email",
             "type": "main",
             "index": 0
           }
@@ -147,14 +237,13 @@
       ]
     }
   },
-  "active": true,
+  "pinData": {},
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "1f6445f3-e0bf-45eb-a392-1e786480c569",
-  "meta": {
-    "instanceId": "43c34b7cc32e1231de7edb497c4f89dd3c1e5bc7b751c2594d5c9f81ec845c34"
-  },
-  "id": "1nRkbuXAFtOHmxaO",
-  "tags": []
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-08-27T12:00:00.000Z",
+  "versionId": "1"
 }

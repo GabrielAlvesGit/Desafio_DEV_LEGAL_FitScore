@@ -35,12 +35,10 @@
                       display: flex;
                       align-items: center;
                       position: relative;
-                      // min-height: 77px;
                       padding: 8px 16px;
                       font-size: 12px;
                       color: variables.$primary-color-white;
                       border-radius: calc(.5rem - 2px);
-                      ;
                       font-weight: 400;
                       line-height: 16px;
                       text-decoration: none;
@@ -72,12 +70,12 @@
               top: 71px;
               padding: 64px;
               scrollbar-width: thin;
-              left: -999px;
+              right: -999px;
               transition: all .8s ease;
               opacity: 0;
 
               &--active {
-                  left: 0;
+                  right: 0;
                   transition: all .4s ease;
                   opacity: 1;
               }
