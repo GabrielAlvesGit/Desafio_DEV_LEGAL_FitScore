@@ -2,7 +2,7 @@
 
 
 <h1 align="center">
-  <a href="https://desafio-dev-legal-fit-score.vercel.app/">website view - FitScore</a>
+ <a href="https://desafio-dev-legal-fit-score.vercel.app/">website view - FitScore <img src="https://github.com/user-attachments/assets/359de570-9556-4386-9380-2db6eea9b18a" alt="Imagem/Icone seta a direita blue" style="width: 20px; height: 20px; margin-left: 5px;"></a>
 </h1>
 
 # 🎯 Mini FitScore™ - PSL LEGAL
@@ -10,8 +10,8 @@
 > Versão simplificada do algoritmo FitScore™ para avaliação de candidatos com base em **Performance**, **Energia** e **Cultura**.
 
 ## 🚀 Deploy
-- **App**: [https://seu-app.vercel.app](https://desafio-dev-legal-fit-score.vercel.app/)
-- **Demo Video**: [Link do vídeo demonstrativo](#)
+- **Página**: [Mini FitScore™](https://desafio-dev-legal-fit-score.vercel.app/)
+
 
 ## 🏗️ Arquitetura
 
@@ -25,6 +25,13 @@ graph LR
 ## 🏗️ Diagrama da Arquitetura da Aplicação
 
 <img width="952" height="533" alt="Diagrama sem nome drawio (3)" src="https://github.com/user-attachments/assets/8832846e-46aa-4412-9cd9-d651a7328524" />
+
+## 🏗️ Diagrama da Arquitetura da Aplicação - Lógica 1 — Notificação de Resultado
+
+<img width="941" height="533" alt="Diagrama sem nome drawio" src="https://github.com/user-attachments/assets/6dbce30a-0fe0-4fd0-a8cc-7096b74135b4" />
+
+## 🏗️ Diagrama da Arquitetura da Aplicação - Lógica 2 — Relatório de Aprovados
+<img width="941" height="533" alt="Diagrama sem nome drawio (1)" src="https://github.com/user-attachments/assets/c0d2ffec-b3b1-4cee-bc83-d63c82c16a54" />
 
 <!-- Tecnologias utilizadas no projeto -->
 
@@ -171,17 +178,13 @@ npm start
 1. **Supabase**: Host + Service Role Key
 2. **SMTP**: Gmail com senha de app
 
-## 🎬 Demonstração
-
-[Incluir link do vídeo demonstrativo aqui]
-
 ### Funcionalidades mostradas:
 - ✅ Formulário multi-step responsivo
 - ✅ Cálculo em tempo real do FitScore
 - ✅ Persistência no Supabase
-- ✅ Notificação automática por email (Notifica somente o aprovados)
+- ✅ Notificação automática por email (Notifica somente para os aprovados, então esta 90%)
 - ✅ Dashboard de candidatos
-- X Relatório automatizado
+- ⚠️ Relatório automatizado (Estou debugando)
 
 ## 🧪 Decisões Técnicas
 
