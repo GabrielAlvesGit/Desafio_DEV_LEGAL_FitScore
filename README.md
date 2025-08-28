@@ -33,6 +33,12 @@ graph LR
 ## 🏗️ Diagrama da Arquitetura da Aplicação - Lógica 2 — Relatório de Aprovados
 <img width="941" height="533" alt="Diagrama sem nome drawio (1)" src="https://github.com/user-attachments/assets/c0d2ffec-b3b1-4cee-bc83-d63c82c16a54" />
 
+## 🏗️ Diagrama da Arquitetura da Aplicação - minha outra solução seria juntar Lógica 1 e Lógica 2
+Essa seria minha segunda opção de resolução do problema, O workflow em n8n integra duas lógicas:
+
+<img width="941" height="533" alt="Diagrama sem nome drawio (2)" src="https://github.com/user-attachments/assets/6153258a-f7f5-4c6e-9fe9-0cb689355af6" />
+
+
 <!-- Tecnologias utilizadas no projeto -->
 
 ### Tecnologias
